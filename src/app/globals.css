@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+/*
+  Windfall's tokens, from windfall/src/theme.ts and DESIGN.md. Pearl ground, kitchen ink, colour on the outline.
+  Terracotta means act, you, or soon; sage means calm, confirmed, structure. src/lib/contrast.test.ts reads this
+  file and checks every text pair at 4.5:1 and every chart mark at 3:1, in both schemes.
+*/
+:root {
+  color-scheme: light;
+  --ground: #faf7f2;
+  --surface: #faf7f2;
+  --ink: #141211;
+  --dim: #66625e;
+  --line: #7a8a5e;
+  --quiet: #958a78;
+  --rule: rgba(32, 30, 29, 0.16);
+  --accent: #c67139;
+  --accent-text: #a4521f;
+  --sage-text: #56633f;
+  --tint: #fff2eb;
+  /* Chart marks: each at 3:1 or better on the ground; segments are split by ground-coloured gaps. */
+  --mark-1: #7a8a5e;
+  --mark-2: #c67139;
+  --mark-3: #3d472b;
+  --mark-4: #8c491a;
+  --mark-open: #958a78;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #141211;
+    --surface: #221e1a;
+    --ink: #f5ead8;
+    --dim: #a99e8d;
+    --line: #9cb07c;
+    --quiet: #7b7164;
+    --rule: rgba(245, 234, 216, 0.16);
+    --accent: #e08a52;
+    --accent-text: #e08a52;
+    --sage-text: #c3d5a4;
+    --tint: #2b1d14;
+    --mark-1: #9cb07c;
+    --mark-2: #e08a52;
+    --mark-3: #d7e5bd;
+    --mark-4: #f6c3a0;
+    --mark-open: #7b7164;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #141211;
+  --surface: #221e1a;
+  --ink: #f5ead8;
+  --dim: #a99e8d;
+  --line: #9cb07c;
+  --quiet: #7b7164;
+  --rule: rgba(245, 234, 216, 0.16);
+  --accent: #e08a52;
+  --accent-text: #e08a52;
+  --sage-text: #c3d5a4;
+  --tint: #2b1d14;
+  --mark-1: #9cb07c;
+  --mark-2: #e08a52;
+  --mark-3: #d7e5bd;
+  --mark-4: #f6c3a0;
+  --mark-open: #7b7164;
+}
+
+@theme inline {
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-dim: var(--dim);
+  --color-line: var(--line);
+  --color-quiet: var(--quiet);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-sage-text: var(--sage-text);
+  --color-tint: var(--tint);
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-pip: var(--font-caprasimo), Georgia, serif;
+  --radius-card: 10px;
+}
+
+html {
+  background: var(--ground);
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+/* The outlined card every block sits on: clear fill by day, the raised surface at night, no shadow. */
+.card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: transparent;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .card {
+    background: var(--surface);
+  }
+}
+:root[data-theme="dark"] .card {
+  background: var(--surface);
+}
+
+.kicker {
+  font-size: 12px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Marks grow in once, only for people who haven't asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .grow-x {
+    transform-box: fill-box;
+    transform-origin: left center;
+    animation: grow-x 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .draw-line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw 900ms ease-out forwards;
+  }
+  .fade-in {
+    animation: fade 500ms ease-out both;
+  }
+}
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Hover and keyboard focus: a bar gets an ink rim; a ring segment or a point turns ink. */
+.mark {
+  cursor: default;
+}
+.mark:hover,
+.mark:focus-visible {
+  outline: none;
+  stroke: var(--ink);
+}
+rect.mark:hover,
+rect.mark:focus-visible {
+  stroke-width: 2;
+  stroke-dasharray: none;
+}

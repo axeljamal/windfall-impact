@@ -1,0 +1,12 @@
+// Cloudflare Workers static assets: serves the static export in out/. Not deployed yet.
+// To deploy later: npm run build && npx wrangler deploy
+{
+  "name": "windfall-impact",
+  "routes": [{ "pattern": "windfall-impact.marea-dvipa.uk", "custom_domain": true }],
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./out",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  }
+}
